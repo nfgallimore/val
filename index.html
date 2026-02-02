@@ -4,193 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will you be my Valentine? 💕</title>
+    <title>Will you be my Valentine?</title>
     <style>
-        * {
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8bbd0;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            touch-action: manipulation;
         }
 
 ```
-    body {
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        touch-action: manipulation;
-    }
-
     .container {
         text-align: center;
-        background: rgba(255, 255, 255, 0.95);
+        background-color: white;
         padding: 40px;
-        border-radius: 30px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         max-width: 500px;
         width: 90%;
-        position: relative;
-        z-index: 1;
     }
 
     h1 {
         color: #e91e63;
-        font-size: 2.5em;
         margin-bottom: 20px;
-        animation: pulse 2s ease-in-out infinite;
+        font-size: 2em;
     }
 
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-    }
-
-    .gif-container {
-        margin: 30px 0;
-        border-radius: 20px;
-        overflow: hidden;
-        max-width: 300px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .gif-container img {
-        width: 100%;
+    img {
+        width: 300px;
         height: auto;
-        display: block;
+        border-radius: 10px;
+        margin-bottom: 20px;
     }
 
-    .question {
-        font-size: 1.8em;
+    p {
+        font-size: 1.5em;
         color: #333;
-        margin: 30px 0;
-        font-weight: bold;
+        margin-bottom: 10px;
     }
 
     .shy-text {
-        font-size: 1.2em;
+        font-size: 1em;
         color: #666;
-        margin: 10px 0 20px 0;
         font-style: italic;
+        margin-bottom: 30px;
     }
 
     .button-container {
-        margin-top: 30px;
         position: relative;
         height: 200px;
         width: 100%;
     }
 
     button {
-        padding: 15px 40px;
+        padding: 15px 30px;
         font-size: 1.2em;
         border: none;
         border-radius: 50px;
         cursor: pointer;
-        transition: all 0.3s ease;
         font-weight: bold;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        transition: all 0.3s ease;
         touch-action: none;
         -webkit-tap-highlight-color: transparent;
     }
 
-    #yesBtn {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    #yesButton {
+        background-color: #4caf50;
         color: white;
-        position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
         z-index: 10;
     }
 
-    #yesBtn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+    #yesButton:hover {
+        background-color: #45a049;
+        transform: translate(-50%, -50%) scale(1.1);
     }
 
-    #yesBtn:active {
-        transform: scale(1.05);
-    }
-
-    #noBtn {
-        background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-        color: #333;
-        position: absolute;
-        transition: all 0.2s ease-out;
+    #noButton {
+        background-color: #f44336;
+        color: white;
         z-index: 5;
     }
 
-    #noBtn:active {
-        transform: scale(0.95);
+    #noButton:hover {
+        background-color: #da190b;
     }
 
-    .hidden {
-        display: none;
-    }
-
-    .message {
-        margin-top: 30px;
-        font-size: 1.5em;
-        color: #e91e63;
-        font-weight: bold;
-        animation: fadeIn 0.5s ease-in;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Mobile optimizations */
     @media (max-width: 600px) {
-        .container {
-            padding: 30px 20px;
-        }
-
         h1 {
-            font-size: 2em;
+            font-size: 1.5em;
         }
 
-        .question {
-            font-size: 1.4em;
+        img {
+            width: 250px;
+        }
+
+        p {
+            font-size: 1.2em;
         }
 
         .shy-text {
-            font-size: 1em;
+            font-size: 0.9em;
         }
 
         button {
-            padding: 12px 30px;
-            font-size: 1.1em;
-        }
-
-        .button-container {
-            height: 200px;
-        }
-    }
-
-    /* Hearts animation */
-    .heart {
-        position: fixed;
-        color: #e91e63;
-        font-size: 20px;
-        animation: float 4s ease-in forwards;
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    @keyframes float {
-        0% {
-            opacity: 1;
-            transform: translateY(0) rotate(0deg);
-        }
-        100% {
-            opacity: 0;
-            transform: translateY(-100vh) rotate(360deg);
+            padding: 12px 25px;
+            font-size: 1em;
         }
     }
 </style>
@@ -200,65 +126,49 @@
 <body>
     <div class="container">
         <h1>💕 Shawni 💕</h1>
+        <img src="https://media1.tenor.com/m/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif" alt="Cute Bear">
+        <p>Will you be my Valentine?</p>
+        <p class="shy-text">No seems a bit shy... 😊</p>
+        <div class="button-container">
+            <button id="yesButton">Yes</button>
+            <button id="noButton">No</button>
+        </div>
+    </div>
 
 ```
-    <div class="gif-container">
-        <img id="gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZmEyYjhkYTVhNjFkYzRmMzM2M2E4OGY3YjNjZjJlMjNlYzQwZjFiNyZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/l0MYMizgnsTpoMuoo/giphy.gif" alt="Cute Valentine">
-    </div>
-
-    <p class="question">Will you be my Valentine?</p>
-    <p class="shy-text">No seems a bit shy... 😊</p>
-
-    <div class="button-container">
-        <button id="yesBtn">Yes! 💖</button>
-        <button id="noBtn">No</button>
-    </div>
-
-    <div id="message" class="message hidden"></div>
-</div>
-
 <script>
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const message = document.getElementById('message');
-    const gif = document.getElementById('gif');
+    const noButton = document.getElementById('noButton');
+    const yesButton = document.getElementById('yesButton');
     const container = document.querySelector('.button-container');
-
     let moveCount = 0;
 
-    // Function to move the No button to a random position
     function moveNoButton() {
         const containerRect = container.getBoundingClientRect();
-        const btnRect = noBtn.getBoundingClientRect();
-        const yesBtnRect = yesBtn.getBoundingClientRect();
+        const noBtnRect = noButton.getBoundingClientRect();
+        const yesBtnRect = yesButton.getBoundingClientRect();
         
-        // Calculate maximum positions to keep button in view
-        const maxX = containerRect.width - btnRect.width;
-        const maxY = containerRect.height - btnRect.height;
+        const maxX = containerRect.width - noBtnRect.width;
+        const maxY = containerRect.height - noBtnRect.height;
         
         let randomX, randomY;
         let attempts = 0;
         const maxAttempts = 50;
         
-        // Keep trying until we find a position that doesn't overlap with Yes button
         do {
             randomX = Math.random() * maxX;
             randomY = Math.random() * maxY;
             attempts++;
             
-            // Calculate absolute position for collision detection
             const noLeft = randomX;
-            const noRight = randomX + btnRect.width;
+            const noRight = randomX + noBtnRect.width;
             const noTop = randomY;
-            const noBottom = randomY + btnRect.height;
+            const noBottom = randomY + noBtnRect.height;
             
-            // Yes button center position (accounting for transform)
             const yesLeft = (containerRect.width / 2) - (yesBtnRect.width / 2) - 20;
             const yesRight = (containerRect.width / 2) + (yesBtnRect.width / 2) + 20;
             const yesTop = (containerRect.height / 2) - (yesBtnRect.height / 2) - 20;
             const yesBottom = (containerRect.height / 2) + (yesBtnRect.height / 2) + 20;
             
-            // Check if positions don't overlap (with 20px padding)
             const noOverlap = (noRight < yesLeft || noLeft > yesRight || 
                                noBottom < yesTop || noTop > yesBottom);
             
@@ -267,81 +177,54 @@
             }
         } while (true);
         
-        noBtn.style.left = randomX + 'px';
-        noBtn.style.top = randomY + 'px';
+        noButton.style.left = randomX + 'px';
+        noButton.style.top = randomY + 'px';
         
         moveCount++;
         
-        // Change button text after multiple moves
         if (moveCount === 3) {
-            noBtn.textContent = "Are you sure? 🥺";
+            noButton.textContent = "Are you sure? 🥺";
         } else if (moveCount === 5) {
-            noBtn.textContent = "Really? 💔";
+            noButton.textContent = "Really? 💔";
         } else if (moveCount === 7) {
-            noBtn.textContent = "Think again! 😢";
+            noButton.textContent = "Please...? 😢";
         }
     }
 
-    // Move the No button on page load after a short delay
+    // Move the No button on page load
     setTimeout(() => {
         moveNoButton();
     }, 500);
 
-    // Move No button on hover (desktop)
-    noBtn.addEventListener('mouseenter', function(e) {
+    // Desktop: Move on hover
+    noButton.addEventListener('mouseenter', function(e) {
         e.preventDefault();
         moveNoButton();
     });
 
-    // Move No button on touch start (mobile)
-    noBtn.addEventListener('touchstart', function(e) {
+    // Mobile: Move on touch
+    noButton.addEventListener('touchstart', function(e) {
         e.preventDefault();
         moveNoButton();
     });
 
-    // Move No button on click/tap
-    noBtn.addEventListener('click', function(e) {
+    // Move on click (backup)
+    noButton.addEventListener('click', function(e) {
         e.preventDefault();
         moveNoButton();
     });
 
-    // Prevent default touch behavior
-    noBtn.addEventListener('touchmove', function(e) {
+    // Prevent scrolling when touching the button
+    noButton.addEventListener('touchmove', function(e) {
         e.preventDefault();
     });
 
     // Yes button action
-    yesBtn.addEventListener('click', function() {
-        message.textContent = "Yay! I knew you'd say yes! 💕";
-        message.classList.remove('hidden');
-        noBtn.classList.add('hidden');
-        yesBtn.textContent = "I love you! 💖";
-        gif.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG8zcjV4bnV5eTBzYmR4a2I3cHRkdGN2ZnVrY3N2Y21lNXc4aTlodyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/G6ojXggFcXWCs/giphy.gif";
-        
-        // Create floating hearts
-        createHearts();
+    yesButton.addEventListener('click', function() {
+        alert('Yay! I knew you would say yes! 💕');
     });
 
-    // Create floating hearts animation
-    function createHearts() {
-        for (let i = 0; i < 15; i++) {
-            setTimeout(() => {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.textContent = '💕';
-                heart.style.left = Math.random() * window.innerWidth + 'px';
-                heart.style.bottom = '0px';
-                heart.style.animationDelay = Math.random() * 2 + 's';
-                document.body.appendChild(heart);
-                
-                setTimeout(() => {
-                    heart.remove();
-                }, 4000);
-            }, i * 200);
-        }
-    }
-
-    // Prevent zoom on double tap for mobile
+    // Prevent double-tap zoom on mobile
     let lastTouchEnd = 0;
     document.addEventListener('touchend', function(e) {
         const now = Date.now();
