@@ -104,7 +104,7 @@
     .button-zone {
       position: relative;
       width: min(520px, 92%);
-      height: 150px;
+      height: 250px;
       margin: 0 auto;
       touch-action: none;
     }
@@ -334,7 +334,7 @@
   <p>I'm so happy you said yes! 💕</p>
   <img
     class="fireworks"
-    src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+    src="https://media.tenor.com/ljlTHUgestUAAAAM/fireworks-new-year.gif"
     alt="Fireworks"
   />
 </section>
@@ -350,23 +350,35 @@
     const hint = document.getElementById("hint");
 
     /* ---------- BACKGROUND MUSIC ---------- */
-    const music = new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_4a456b6bd8.mp3');
+    // Using a reliable romantic background music
+    const music = new Audio('https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3');
     music.loop = true;
     music.volume = 0.3;
+    music.preload = 'auto';
     
-    // Auto-play music on load
-    window.addEventListener('load', () => {
-      music.play().catch(() => {
-        // If autoplay is blocked, play on first interaction
-        const playOnce = () => {
-          music.play();
-          document.removeEventListener('click', playOnce);
-          document.removeEventListener('touchstart', playOnce);
-        };
-        document.addEventListener('click', playOnce);
-        document.addEventListener('touchstart', playOnce);
-      });
+    let musicStarted = false;
+    
+    // Function to start music
+    function startMusic() {
+      if (!musicStarted) {
+        music.play()
+          .then(() => {
+            musicStarted = true;
+            console.log('🎵 Music is now playing!');
+          })
+          .catch((error) => {
+            console.log('Still blocked:', error.message);
+          });
+      }
+    }
+    
+    // Try immediately on any interaction
+    ['click', 'touchstart', 'touchend', 'mousedown', 'keydown'].forEach(event => {
+      document.addEventListener(event, startMusic, { once: false });
     });
+    
+    // Also try after a short delay
+    setTimeout(startMusic, 500);
 
     /* ---------- CONFETTI ---------- */
     const confettiCanvas = document.getElementById("confettiCanvas");
@@ -438,28 +450,49 @@
       dx /= mag;
       dy /= mag;
 
-      // Increase movement distance for more dramatic effect
-      let newLeft = (b.left - z.left) + dx * 200;
-      let newTop  = (b.top - z.top) + dy * 200;
+      // Much larger movement distance for more dramatic effect
+      let moveDistance = 250;
+      let newLeft = (b.left - z.left) + dx * moveDistance;
+      let newTop  = (b.top - z.top) + dy * moveDistance;
 
-      newLeft = clamp(newLeft, 0, z.width - b.width);
-      newTop  = clamp(newTop, 0, z.height - b.height);
+      // Clamp with padding from edges
+      const edgePadding = 10;
+      newLeft = clamp(newLeft, edgePadding, z.width - b.width - edgePadding);
+      newTop  = clamp(newTop, edgePadding, z.height - b.height - edgePadding);
 
-      // Prevent overlap with Yes button (with 20px padding)
-      const yesLeft = y.left - z.left - 20;
-      const yesRight = y.left - z.left + y.width + 20;
-      const yesTop = y.top - z.top - 20;
-      const yesBottom = y.top - z.top + y.height + 20;
+      // Prevent overlap with Yes button (with larger 40px padding)
+      const yesLeft = y.left - z.left - 40;
+      const yesRight = y.left - z.left + y.width + 40;
+      const yesTop = y.top - z.top - 40;
+      const yesBottom = y.top - z.top + y.height + 40;
 
       // Check if new position would overlap with Yes button
       if (newLeft + b.width > yesLeft && newLeft < yesRight &&
           newTop + b.height > yesTop && newTop < yesBottom) {
-        // Move to opposite side if overlapping
-        if (newLeft < z.width / 2) {
-          newLeft = Math.max(yesRight + 10, newLeft);
-        } else {
-          newLeft = Math.min(yesLeft - b.width - 10, newLeft);
-        }
+        // Move to a random corner instead
+        const corners = [
+          { x: edgePadding, y: edgePadding }, // top left
+          { x: z.width - b.width - edgePadding, y: edgePadding }, // top right
+          { x: edgePadding, y: z.height - b.height - edgePadding }, // bottom left
+          { x: z.width - b.width - edgePadding, y: z.height - b.height - edgePadding } // bottom right
+        ];
+        
+        // Find farthest corner from Yes button
+        let farthestCorner = corners[0];
+        let maxDist = 0;
+        corners.forEach(corner => {
+          const dist = Math.hypot(
+            corner.x - (y.left - z.left),
+            corner.y - (y.top - z.top)
+          );
+          if (dist > maxDist) {
+            maxDist = dist;
+            farthestCorner = corner;
+          }
+        });
+        
+        newLeft = farthestCorner.x;
+        newTop = farthestCorner.y;
       }
 
       noBtn.style.left = newLeft + "px";
