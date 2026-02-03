@@ -2,239 +2,586 @@
 
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will you be my Valentine?</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f8bbd0;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            touch-action: manipulation;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Will you be my Valentine?</title>
 
-```
-    .container {
-        text-align: center;
-        background-color: white;
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        max-width: 500px;
-        width: 90%;
+  <!-- Confetti library -->
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg1: #ffd6e7;
+      --bg2: #ffeef6;
+      --card: #ffffffcc;
+      --yes: #ff3b7a;
+      --yesHover: #ff1f68;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+      background-size: 200% 200%;
+      animation: bgShift 10s ease infinite;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    @keyframes bgShift {
+      0%, 100% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+    }
+
+    /* FULL-SCREEN CONFETTI CANVAS */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .card {
+      width: min(720px, 92vw);
+      padding: 26px 22px;
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      text-align: center;
+      box-shadow: 0 18px 60px rgba(0,0,0,.15);
+      animation: cardFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .art {
+      width: min(260px, 80vw);
+      margin: 0 auto 10px;
+      display: block;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.12));
+    }
+
+    .art path[fill="url(#heart)"] {
+      animation: heartbeat 1.5s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      10% { transform: scale(1.1); }
+      20% { transform: scale(1); }
+      30% { transform: scale(1.1); }
+      40% { transform: scale(1); }
     }
 
     h1 {
-        color: #e91e63;
-        margin-bottom: 20px;
-        font-size: 2em;
+      font-size: clamp(26px, 4vw, 44px);
+      margin: 12px 0 18px;
+      background: linear-gradient(135deg, #ff3b7a, #ff6b9d, #c44569, #ff3b7a);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease infinite;
     }
 
-    img {
-        width: 300px;
-        height: auto;
-        border-radius: 10px;
-        margin-bottom: 20px;
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
-    p {
-        font-size: 1.5em;
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-    .shy-text {
-        font-size: 1em;
-        color: #666;
-        font-style: italic;
-        margin-bottom: 30px;
-    }
-
-    .button-container {
-        position: relative;
-        height: 200px;
-        width: 100%;
+    .button-zone {
+      position: relative;
+      width: min(520px, 92%);
+      height: 150px;
+      margin: 0 auto;
+      touch-action: none;
     }
 
     button {
-        padding: 15px 30px;
-        font-size: 1.2em;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: bold;
-        position: absolute;
-        transition: all 0.3s ease;
-        touch-action: none;
-        -webkit-tap-highlight-color: transparent;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 16px 24px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(0,0,0,.14);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    #yesButton {
-        background-color: #4caf50;
-        color: white;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
+    #yesBtn {
+      left: 18%;
+      background: var(--yes);
+      color: #fff;
+      z-index: 10;
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 10px 24px rgba(0,0,0,.14), 0 0 20px rgba(255, 59, 122, 0.3);
+      }
+      50% {
+        box-shadow: 0 10px 24px rgba(0,0,0,.14), 0 0 40px rgba(255, 59, 122, 0.6);
+      }
+    }
+    
+    #yesBtn:hover { 
+      background: var(--yesHover);
+      box-shadow: 0 15px 35px rgba(255, 59, 122, 0.4);
+      animation: none;
+    }
+    #yesBtn:active {
+      transform: translateY(-50%) scale(0.95);
     }
 
-    #yesButton:hover {
-        background-color: #45a049;
-        transform: translate(-50%, -50%) scale(1.1);
+    #noBtn {
+      left: 62%;
+      background: #e5e7eb;
+      color: #111827;
+      z-index: 5;
+      transition: all .15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #noBtn:hover {
+      background: #d1d5db;
+    }
+    #noBtn.shake {
+      animation: shake 0.3s ease-in-out;
     }
 
-    #noButton {
-        background-color: #f44336;
-        color: white;
-        z-index: 5;
+    @keyframes shake {
+      0%, 100% { transform: translateX(0) translateY(0); }
+      25% { transform: translateX(-5px) translateY(-5px); }
+      50% { transform: translateX(5px) translateY(5px); }
+      75% { transform: translateX(-5px) translateY(5px); }
     }
 
-    #noButton:hover {
-        background-color: #da190b;
+    .hint {
+      margin-top: 10px;
+      font-size: 13px;
+      opacity: .7;
     }
 
-    @media (max-width: 600px) {
-        h1 {
-            font-size: 1.5em;
-        }
-
-        img {
-            width: 250px;
-        }
-
-        p {
-            font-size: 1.2em;
-        }
-
-        .shy-text {
-            font-size: 0.9em;
-        }
-
-        button {
-            padding: 12px 25px;
-            font-size: 1em;
-        }
+    .result {
+      display: none;
+      margin-top: 18px;
+      animation: pop .35s ease;
     }
-</style>
-```
+
+    .result h2 {
+      font-size: clamp(30px, 4.5vw, 46px);
+      margin: 10px 0;
+      background: linear-gradient(135deg, #ff3b7a, #ff1f68);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .result p {
+      font-size: clamp(16px, 3vw, 20px);
+      color: #666;
+      margin: 15px 0;
+      font-style: italic;
+    }
+
+    .fireworks {
+      width: min(380px, 90vw);
+      margin: 0 auto;
+      display: block;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Floating hearts animation */
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      animation: float 6s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Sparkle cursor effect */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      animation: sparkleAnimation 0.6s ease-out forwards;
+      z-index: 9998;
+    }
+
+    @keyframes sparkleAnimation {
+      0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1) rotate(180deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
 
 </head>
+
 <body>
-    <div class="container">
-        <h1>💕 Shawni 💕</h1>
-        <img src="https://media1.tenor.com/m/gUiu1zyxfzYAAAAC/bear-kiss-bear-kisses.gif" alt="Cute Bear">
-        <p>Will you be my Valentine?</p>
-        <p class="shy-text">No seems a bit shy... 😊</p>
-        <div class="button-container">
-            <button id="yesButton">Yes</button>
-            <button id="noButton">No</button>
-        </div>
-    </div>
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Floating hearts background -->
+
+  <div class="heart" style="left: 5%; animation-delay: 0s;">💕</div>
+  <div class="heart" style="left: 15%; animation-delay: 1.5s;">💖</div>
+  <div class="heart" style="left: 25%; animation-delay: 3s;">💗</div>
+  <div class="heart" style="left: 35%; animation-delay: 0.5s;">💓</div>
+  <div class="heart" style="left: 45%; animation-delay: 2s;">💕</div>
+  <div class="heart" style="left: 55%; animation-delay: 4s;">💖</div>
+  <div class="heart" style="left: 65%; animation-delay: 1s;">💗</div>
+  <div class="heart" style="left: 75%; animation-delay: 3.5s;">💓</div>
+  <div class="heart" style="left: 85%; animation-delay: 2.5s;">💕</div>
+  <div class="heart" style="left: 95%; animation-delay: 5s;">💖</div>
+
+  <main class="card">
+    <!-- ANIMAL WITH HEART -->
+    <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="fur" x1="0" x2="1">
+          <stop offset="0" stop-color="#f7c7a1"/>
+          <stop offset="1" stop-color="#f2a97b"/>
+        </linearGradient>
+        <linearGradient id="heart" x1="0" x2="1">
+          <stop offset="0" stop-color="#ff4d7d"/>
+          <stop offset="1" stop-color="#ff1f68"/>
+        </linearGradient>
+      </defs>
 
 ```
-<script>
-    const noButton = document.getElementById('noButton');
-    const yesButton = document.getElementById('yesButton');
-    const container = document.querySelector('.button-container');
-    let moveCount = 0;
+  <path d="M250 50 C250 33 270 25 282 38
+           C294 25 314 33 314 50
+           C314 78 282 92 282 106
+           C282 92 250 78 250 50Z"
+        fill="url(#heart)"/>
 
-    function moveNoButton() {
-        const containerRect = container.getBoundingClientRect();
-        const noBtnRect = noButton.getBoundingClientRect();
-        const yesBtnRect = yesButton.getBoundingClientRect();
-        
-        const maxX = containerRect.width - noBtnRect.width;
-        const maxY = containerRect.height - noBtnRect.height;
-        
-        let randomX, randomY;
-        let attempts = 0;
-        const maxAttempts = 50;
-        
-        do {
-            randomX = Math.random() * maxX;
-            randomY = Math.random() * maxY;
-            attempts++;
-            
-            const noLeft = randomX;
-            const noRight = randomX + noBtnRect.width;
-            const noTop = randomY;
-            const noBottom = randomY + noBtnRect.height;
-            
-            const yesLeft = (containerRect.width / 2) - (yesBtnRect.width / 2) - 20;
-            const yesRight = (containerRect.width / 2) + (yesBtnRect.width / 2) + 20;
-            const yesTop = (containerRect.height / 2) - (yesBtnRect.height / 2) - 20;
-            const yesBottom = (containerRect.height / 2) + (yesBtnRect.height / 2) + 20;
-            
-            const noOverlap = (noRight < yesLeft || noLeft > yesRight || 
-                               noBottom < yesTop || noTop > yesBottom);
-            
-            if (noOverlap || attempts >= maxAttempts) {
-                break;
-            }
-        } while (true);
-        
-        noButton.style.left = randomX + 'px';
-        noButton.style.top = randomY + 'px';
-        
-        moveCount++;
-        
-        if (moveCount === 3) {
-            noButton.textContent = "Are you sure? 🥺";
-        } else if (moveCount === 5) {
-            noButton.textContent = "Really? 💔";
-        } else if (moveCount === 7) {
-            noButton.textContent = "Please...? 😢";
-        }
+  <path d="M90 120 C90 70 140 40 190 60
+           C240 40 290 70 290 120
+           C290 180 240 210 190 210
+           C140 210 90 180 90 120Z"
+        fill="url(#fur)"/>
+
+  <path d="M110 92 L95 55 L140 78 Z" fill="#f2a97b"/>
+  <path d="M270 92 L285 55 L240 78 Z" fill="#f2a97b"/>
+
+  <circle cx="160" cy="130" r="8"/>
+  <circle cx="220" cy="130" r="8"/>
+
+  <path d="M190 144 C186 144 182 148 182 152
+           C182 160 190 164 190 170
+           C190 164 198 160 198 152
+           C198 148 194 144 190 144Z"
+        fill="#ff7aa2"/>
+</svg>
+
+<h1>Shawni, will you be my Valentine? 💕</h1>
+
+<section class="button-zone" id="zone">
+  <button id="yesBtn">Yes</button>
+  <button id="noBtn">No</button>
+</section>
+
+<!-- HINT -->
+<div class="hint" id="hint">"No" seems a bit shy... catch it if you can! 😈</div>
+
+<section class="result" id="result">
+  <h2>YAY! 🎉</h2>
+  <p>I'm so happy you said yes! 💕</p>
+  <img
+    class="fireworks"
+    src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+    alt="Fireworks"
+  />
+</section>
+```
+
+  </main>
+
+  <script>
+    const zone = document.getElementById("zone");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const result = document.getElementById("result");
+    const hint = document.getElementById("hint");
+
+    /* ---------- BACKGROUND MUSIC ---------- */
+    const music = new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_4a456b6bd8.mp3');
+    music.loop = true;
+    music.volume = 0.3;
+    
+    // Auto-play music on load
+    window.addEventListener('load', () => {
+      music.play().catch(() => {
+        // If autoplay is blocked, play on first interaction
+        const playOnce = () => {
+          music.play();
+          document.removeEventListener('click', playOnce);
+          document.removeEventListener('touchstart', playOnce);
+        };
+        document.addEventListener('click', playOnce);
+        document.addEventListener('touchstart', playOnce);
+      });
+    });
+
+    /* ---------- CONFETTI ---------- */
+    const confettiCanvas = document.getElementById("confettiCanvas");
+
+    function resizeConfettiCanvas() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      confettiCanvas.width = Math.floor(window.innerWidth * dpr);
+      confettiCanvas.height = Math.floor(window.innerHeight * dpr);
+      confettiCanvas.style.width = "100vw";
+      confettiCanvas.style.height = "100vh";
     }
 
-    // Move the No button on page load
+    resizeConfettiCanvas();
+    window.addEventListener("resize", resizeConfettiCanvas);
+    window.addEventListener("orientationchange", () => setTimeout(resizeConfettiCanvas, 150));
+
+    const confettiInstance = confetti.create(confettiCanvas, {
+      resize: false,
+      useWorker: true
+    });
+
+    function fullScreenConfetti() {
+      const end = Date.now() + 1600;
+
+      (function frame() {
+        confettiInstance({
+          particleCount: 12,
+          spread: 90,
+          startVelocity: 45,
+          ticks: 180,
+          origin: { x: Math.random(), y: Math.random() * 0.3 }
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+
+      setTimeout(() => {
+        confettiInstance({
+          particleCount: 300,
+          spread: 140,
+          startVelocity: 60,
+          ticks: 220,
+          origin: { x: 0.5, y: 0.55 }
+        });
+      }, 300);
+    }
+
+    /* ---------- YES BUTTON GROWS ---------- */
+    let yesScale = 1;
+    function growYes() {
+      yesScale = Math.min(2.2, yesScale + 0.1);
+      yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
+    }
+
+    /* ---------- NO BUTTON RUNS AWAY ---------- */
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    let clickAttempts = 0;
+
+    function moveNo(px, py, isUserClick = false) {
+      const z = zone.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+      const y = yesBtn.getBoundingClientRect();
+
+      let dx = (b.left + b.width / 2) - px;
+      let dy = (b.top + b.height / 2) - py;
+      let mag = Math.hypot(dx, dy) || 1;
+      dx /= mag;
+      dy /= mag;
+
+      // Increase movement distance for more dramatic effect
+      let newLeft = (b.left - z.left) + dx * 200;
+      let newTop  = (b.top - z.top) + dy * 200;
+
+      newLeft = clamp(newLeft, 0, z.width - b.width);
+      newTop  = clamp(newTop, 0, z.height - b.height);
+
+      // Prevent overlap with Yes button (with 20px padding)
+      const yesLeft = y.left - z.left - 20;
+      const yesRight = y.left - z.left + y.width + 20;
+      const yesTop = y.top - z.top - 20;
+      const yesBottom = y.top - z.top + y.height + 20;
+
+      // Check if new position would overlap with Yes button
+      if (newLeft + b.width > yesLeft && newLeft < yesRight &&
+          newTop + b.height > yesTop && newTop < yesBottom) {
+        // Move to opposite side if overlapping
+        if (newLeft < z.width / 2) {
+          newLeft = Math.max(yesRight + 10, newLeft);
+        } else {
+          newLeft = Math.min(yesLeft - b.width - 10, newLeft);
+        }
+      }
+
+      noBtn.style.left = newLeft + "px";
+      noBtn.style.top = newTop + "px";
+      noBtn.style.transform = "none";
+
+      // Add shake effect
+      noBtn.classList.add('shake');
+      setTimeout(() => noBtn.classList.remove('shake'), 300);
+
+      growYes();
+
+      // Only change text when user actively tries to click
+      if (isUserClick) {
+        clickAttempts++;
+        if (clickAttempts === 1) {
+          noBtn.textContent = "Wait... 🤔";
+        } else if (clickAttempts === 2) {
+          noBtn.textContent = "Are you sure? 🥺";
+        } else if (clickAttempts === 3) {
+          noBtn.textContent = "Really? 💔";
+        } else if (clickAttempts === 4) {
+          noBtn.textContent = "Please? 😢";
+        } else if (clickAttempts === 5) {
+          noBtn.textContent = "Think about it! 🙏";
+        } else if (clickAttempts >= 6) {
+          noBtn.textContent = "Just click Yes! 😭";
+        }
+      }
+    }
+
+    // Move No button on page load
     setTimeout(() => {
-        moveNoButton();
+      const z = zone.getBoundingClientRect();
+      const centerX = z.left + z.width / 2;
+      const centerY = z.top + z.height / 2;
+      moveNo(centerX, centerY, false);
     }, 500);
 
-    // Desktop: Move on hover
-    noButton.addEventListener('mouseenter', function(e) {
-        e.preventDefault();
-        moveNoButton();
+    // Constantly move No button every 1 second (more frequent)
+    let autoMoveInterval = setInterval(() => {
+      if (result.style.display !== 'block') {
+        const z = zone.getBoundingClientRect();
+        // Pick a random point to move away from
+        const randomX = z.left + Math.random() * z.width;
+        const randomY = z.top + Math.random() * z.height;
+        moveNo(randomX, randomY, false);
+      } else {
+        clearInterval(autoMoveInterval);
+      }
+    }, 1000);
+
+    // Desktop: hover/mouse movement
+    zone.addEventListener("pointermove", e => {
+      const b = noBtn.getBoundingClientRect();
+      const d = Math.hypot(
+        (b.left + b.width / 2) - e.clientX,
+        (b.top + b.height / 2) - e.clientY
+      );
+      if (d < 140) moveNo(e.clientX, e.clientY, false);
     });
 
-    // Mobile: Move on touch
-    noButton.addEventListener('touchstart', function(e) {
-        e.preventDefault();
-        moveNoButton();
+    // Mobile: touch start
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      moveNo(touch.clientX, touch.clientY, true);
     });
 
-    // Move on click (backup)
-    noButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        moveNoButton();
+    // Prevent click on No button and count as attempt
+    noBtn.addEventListener("click", e => {
+      e.preventDefault();
+      moveNo(e.clientX, e.clientY, true);
     });
 
-    // Prevent scrolling when touching the button
-    noButton.addEventListener('touchmove', function(e) {
-        e.preventDefault();
+    /* ---------- YES CLICK ---------- */
+    yesBtn.addEventListener("click", () => {
+      zone.style.display = "none";
+      hint.style.display = "none";     // HIDE THE HINT
+      result.style.display = "block";
+      resizeConfettiCanvas();
+      fullScreenConfetti();
+      
+      // Play a happy sound effect
+      const cheer = new Audio('https://cdn.pixabay.com/audio/2021/08/04/audio_12b0c7443c.mp3');
+      cheer.volume = 0.5;
+      cheer.play().catch(() => {});
     });
 
-    // Yes button action
-    yesButton.addEventListener('click', function() {
-        alert('Yay! I knew you would say yes! 💕');
+    /* ---------- SPARKLE CURSOR EFFECT ---------- */
+    const sparkleEmojis = ['✨', '💫', '⭐', '🌟', '💖', '💕'];
+    let lastSparkleTime = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastSparkleTime > 100) { // Throttle sparkles
+        createSparkle(e.clientX, e.clientY);
+        lastSparkleTime = now;
+      }
     });
 
-    // Prevent double-tap zoom on mobile
-    let lastTouchEnd = 0;
-    document.addEventListener('touchend', function(e) {
-        const now = Date.now();
-        if (now - lastTouchEnd <= 300) {
-            e.preventDefault();
-        }
-        lastTouchEnd = now;
-    }, false);
-</script>
-```
+    document.addEventListener('touchmove', (e) => {
+      const now = Date.now();
+      if (now - lastSparkleTime > 100) {
+        const touch = e.touches[0];
+        createSparkle(touch.clientX, touch.clientY);
+        lastSparkleTime = now;
+      }
+    });
+
+    function createSparkle(x, y) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.textContent = sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)];
+      sparkle.style.left = x + 'px';
+      sparkle.style.top = y + 'px';
+      sparkle.style.fontSize = (Math.random() * 10 + 15) + 'px';
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => sparkle.remove(), 600);
+    }
+  </script>
 
 </body>
 </html>
